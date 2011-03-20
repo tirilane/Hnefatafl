@@ -7,12 +7,15 @@ from exception import *
 size = 11
 board = None
 
+def legal_move (piece, from_square, to_square):
+    return True
+
 class piece:
     def __init__ (self):
         self.alive = True
+        self.square = None 
 
-    def move_piece (self, from_coor, to_coor):
-       pass
+
         
 class defender (piece):
     def __init__ (self):
@@ -120,7 +123,11 @@ class square:
             return king()
         else:
             return None
-        
+
+    def is_free (self):
+        if self.piece == None:
+            return True
+        return False
 
 
 class board:
@@ -156,6 +163,22 @@ class board:
             print("   ----------------------------------------")
         else:
             raise WrongSizeException("Board size is %s: should be either 11 or 13.")
+
+    def get_piece (self, row, col):
+        return self.squares[row][col].piece
+
+def move (from_coor, to_coor):
+    global board
+    from_square = board.squares[from_coor[0]][from_coor[1]]
+    to_square = board.squares[to_coor[0]][to_coor[1]]
+    if from_square.piece == None:
+        raise NoPieceWarning("No piece available on square (%i,%i)." % (from_coor))
+    if not to_square.is_free():
+        raise SquareOccupiedWarning("There is already a piece on square (%i,%i)." % (to_coor))
+    piece = from_square.piece
+    from_square.piece = None
+    to_square.piece = piece
+    piece.square = to_square
 
 def hnefatafl (board_size=11):
     if board_size != 11 and board_size != 13:
