@@ -9,3 +9,6 @@ class NoPieceWarning (Warning):
 class SquareOccupiedWarning (Warning):
     pass
 
+class RuleWarning (Warning):
+    pass
+

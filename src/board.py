@@ -15,21 +15,28 @@ class piece:
         self.alive = True
         self.square = None 
 
-
+class soldier (piece):
+    pass
         
-class defender (piece):
+class defender (soldier):
     def __init__ (self):
         self.img = None
 
     def __str__ (self):
         return "O"
 
-class attacker (piece):
+    def legal_moce (self, from_coor, to_coor):
+        pass
+
+class attacker (soldier):
     def __init__ (self):
         self.img = None
 
     def __str__ (self):
         return "X"
+
+    def legal_moce (self, from_coor, to_coor):
+        pass
 
 class king (piece):
     def __init__ (self):
@@ -37,6 +44,9 @@ class king (piece):
 
     def __str__ (self):
         return "#"
+
+    def legal_moce (self, from_coor, to_coor):
+        pass
 
 def get_square_type (row, col):
     global size
@@ -171,11 +181,13 @@ def move (from_coor, to_coor):
     global board
     from_square = board.squares[from_coor[0]][from_coor[1]]
     to_square = board.squares[to_coor[0]][to_coor[1]]
-    if from_square.piece == None:
-        raise NoPieceWarning("No piece available on square (%i,%i)." % (from_coor))
-    if not to_square.is_free():
-        raise SquareOccupiedWarning("There is already a piece on square (%i,%i)." % (to_coor))
     piece = from_square.piece
+    if from_square.piece == None:
+        raise RuleWarning("No piece available on square (%i,%i)." % (from_coor))
+    if not to_square.is_free():
+        raise RuleWarning("There is already a piece on square (%i,%i)." % (to_coor))
+    if not piece.legal_move(from_coor, to_coor):
+        raise RuleWarning("It is illegal to move from (%i,%i) to (%i,%i)." % (from_coor, to_coor)
     from_square.piece = None
     to_square.piece = piece
     piece.square = to_square
